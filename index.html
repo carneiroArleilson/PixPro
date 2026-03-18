@@ -1,456 +1,515 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-<meta charset="UTF-8">
-<title>PIX Pro</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <title>PIX Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
-<style>
-*{box-sizing:border-box}
+    <style>
+        * {
+            box-sizing: border-box
+        }
 
-body{
-    font-family:"Inter",Arial;
-    background:linear-gradient(135deg,#6a11cb,#2575fc);
-    margin:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
+        body {
+            font-family: "Inter", Arial;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-.container{
-    background:white;
-    padding:25px;
-    border-radius:16px;
-    width:380px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.2);
-	display: flex;
-    flex-direction: column;
-}
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            width: 380px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
 
-.header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:15px;
-}
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
 
-.header h1{
-    margin:0;
-    font-size:22px;
-    text-align:center;
-}
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            text-align: center;
+        }
 
-.btn-report{
-    padding:6px 10px;
-    font-size:12px;
-    border:none;
-    border-radius:6px;
-    background:#6a11cb;
-    color:white;
-    cursor:pointer;
-    width:unset;
-}
+        .btn-report {
+            padding: 6px 10px;
+            font-size: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #6a11cb;
+            color: white;
+            cursor: pointer;
+            width: unset;
+        }
 
-.secondary{background:#f1f1f1;color:black;}
+        .secondary {
+            background: #f1f1f1;
+            color: black;
+        }
 
-.pix-value {
-    font-size:20px;
-    font-weight:bold;
-    text-align:center;
-    margin-top:10px;
-}
+        .pix-value {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
 
-input{
-    width:100%;
-    padding:12px;
-    margin-top:8px;
-    border-radius:8px;
-    border:1px solid #ddd;
-    font-size:15px;
-}
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+        }
 
-button{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:none;
-    border-radius:8px;
-    font-weight:600;
-    cursor:pointer;
-}
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
 
-.primary{background:#6a11cb;color:white;}
-.success{background:#00b894;color:white;}
-.danger{background:#e74c3c;color:white;}
+        .primary {
+            background: #6a11cb;
+            color: white;
+        }
 
-canvas{
-    margin:15px auto;
-    padding:10px;
-    background:white;
-    border-radius:10px;
-}
+        .success {
+            background: #00b894;
+            color: white;
+        }
 
-textarea{
-    width:100%;
-    height:80px;
-    margin-top:10px;
-    border-radius:8px;
-    padding:10px;
-    border:1px solid #ddd;
-}
+        .danger {
+            background: #e74c3c;
+            color: white;
+        }
 
-.modal{
-    position:fixed;
-    top:0;left:0;
-    width:100%;height:100%;
-    background:rgba(0,0,0,0.6);
-    display:none;
-    justify-content:center;
-    align-items:center;
-}
+        canvas {
+            margin: 15px auto;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+        }
 
-.modal-content{
-    background:white;
-    width:420px;
-    max-height:85%;
-    border-radius:14px;
-    padding:20px;
-    display:flex;
-    flex-direction:column;
-}
+        textarea {
+            width: 100%;
+            height: 80px;
+            margin-top: 10px;
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
 
-.modal-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:10px;
-}
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
 
-.total{font-size:20px;font-weight:bold;}
+        .modal-content {
+            background: white;
+            width: 420px;
+            max-height: 85%;
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
 
-.close{
-    background:#eee;
-    border-radius:6px;
-    padding:6px 10px;
-    cursor:pointer;
-}
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
 
-.list{
-    overflow:auto;
-    max-height:300px;
-}
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+        }
 
-.item{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:10px;
-    border-bottom:1px solid #eee;
-}
+        .close {
+            background: #eee;
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+        }
 
-.item.disabled{opacity:0.4;}
+        .list {
+            overflow: auto;
+            max-height: 300px;
+        }
 
-.item input{
-    appearance:none;
-    width:18px;
-    height:18px;
-    border:2px solid #ccc;
-    border-radius:5px;
-    cursor:pointer;
-    position:relative;
-}
+        .item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
 
-.item input:checked{
-    border-color:#e74c3c;
-    background:#ffecec;
-}
+        .item.disabled {
+            opacity: 0.4;
+        }
 
-.item input:checked::after{
-    content:"✖";
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    color:#e74c3c;
-}
+        .item input {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+        }
 
-#printArea{display:none;}
+        .item input:checked {
+            border-color: #e74c3c;
+            background: #ffecec;
+        }
 
-@media print{
-body *{visibility:hidden}
-#printArea, #printArea *{visibility:visible}
-#printArea{
-    display:block;
-    position:absolute;
-    top:0;
-    left:0;
-}
-}
-</style>
+        .item input:checked::after {
+            content: "✖";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #e74c3c;
+        }
+
+        #printArea {
+            display: none;
+        }
+        
+
+        @media print {
+            body * {
+                visibility: hidden
+            }
+
+            #printArea,
+            #printArea * {
+                visibility: visible
+            }
+            @page {
+                margin: 0;
+                size: auto; 
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            #printArea {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 220px; /* Mesma largura que você usou no JS */
+                padding: 10px;
+                margin: 0;
+            }
+
+            /* Esconde todo o resto da página que não seja o relatório */
+            body > *:not(#printArea) {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-<div class="header">
-    <button class="btn-report secondary" onclick="openConfig()">
-        <i class="fas fa-gear"></i>
-    </button>
-    <h1>PIX Pro</h1>
-    <button class="btn-report" onclick="openModal()">
-        <i class="fas fa-chart-bar"></i>
-    </button>
-</div>
+        <div class="header">
+            <button class="btn-report secondary" onclick="openConfig()">
+                <i class="fas fa-gear"></i>
+            </button>
+            <h1>PIX Pro</h1>
+            <button class="btn-report" onclick="openModal()">
+                <i class="fas fa-chart-bar"></i>
+            </button>
+        </div>
 
 
-<input id="value" placeholder="Digite o valor">
+        <input id="value" placeholder="Digite o valor">
 
-<button class="primary" onclick="generatePix()">Gerar PIX</button>
+        <button class="primary" onclick="generatePix()">Gerar PIX</button>
 
-<div class="pix-value" id="pixValue">R$ 0,00</div>
+        <div class="pix-value" id="pixValue">R$ 0,00</div>
 
-<canvas id="qrCanvas" width="220"></canvas>
-<textarea id="pixCode"></textarea>
-<button class="success" onclick="copyPix()">
-    <i class="fas fa-copy"></i> Copiar Código
-</button>
+        <canvas id="qrCanvas" width="220"></canvas>
+        <textarea id="pixCode"></textarea>
+        <button class="success" onclick="copyPix()">
+            <i class="fas fa-copy"></i> Copiar Código
+        </button>
 
-</div>
+    </div>
 
-<!-- MODAL RELATÓRIO -->
-<div class="modal" id="modal">
-<div class="modal-content">
+    <!-- MODAL RELATÓRIO -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
 
-<div class="modal-header">
-<div class="total" id="totalValue">R$ 0,00</div>
-<div class="close" onclick="closeModal()">
-    <i class="fas fa-xmark"></i>
-</div>
-</div>
+            <div class="modal-header">
+                <div class="total" id="totalValue">R$ 0,00</div>
+                <div class="close" onclick="closeModal()">
+                    <i class="fas fa-xmark"></i>
+                </div>
+            </div>
 
-<button class="primary" onclick="printReport()">
-    <i class="fas fa-print"></i> Imprimir
-</button>
+            <button class="primary" onclick="printReport()">
+                <i class="fas fa-print"></i> Imprimir
+            </button>
 
-<button class="danger" onclick="clearReport()">
-    <i class="fas fa-trash"></i> Limpar histórico
-</button>
+            <button class="danger" onclick="clearReport()">
+                <i class="fas fa-trash"></i> Limpar histórico
+            </button>
 
-<div class="list" id="reportList"></div>
+            <div class="list" id="reportList"></div>
 
-</div>
-</div>
+        </div>
+    </div>
 
-<!-- MODAL CONFIG -->
-<div class="modal" id="configModal">
-<div class="modal-content">
+    <!-- MODAL CONFIG -->
+    <div class="modal" id="configModal">
+        <div class="modal-content">
 
-<div class="modal-header">
-<h3>Configurações</h3>
-<div class="close" onclick="closeConfig()">
-    <i class="fas fa-xmark"></i>
-</div>
-</div>
+            <div class="modal-header">
+                <h3>Configurações</h3>
+                <div class="close" onclick="closeConfig()">
+                    <i class="fas fa-xmark"></i>
+                </div>
+            </div>
 
-<input id="pixKey" placeholder="Chave PIX">
-<input id="name" placeholder="Nome">
-<input id="city" placeholder="Cidade">
+            <input id="pixKey" placeholder="Chave PIX">
+            <input id="name" placeholder="Nome">
+            <input id="city" placeholder="Cidade">
 
-<button class="primary" onclick="saveConfig()">Salvar</button>
+            <button class="primary" onclick="saveConfig()">Salvar</button>
 
-</div>
-</div>
+        </div>
+    </div>
 
-<div id="printArea"></div>
+    <div id="printArea"></div>
 
-<script>
-const pixKey=document.getElementById("pixKey")
-const nameField=document.getElementById("name")
-const cityField=document.getElementById("city")
-const valueField=document.getElementById("value")
-const pixValueDisplay=document.getElementById("pixValue")
-const pixCode=document.getElementById("pixCode")
-const qrCanvas=document.getElementById("qrCanvas")
-const reportList=document.getElementById("reportList")
-const totalValue=document.getElementById("totalValue")
+    <script>
+        const pixKey = document.getElementById("pixKey")
+        const nameField = document.getElementById("name")
+        const cityField = document.getElementById("city")
+        const valueField = document.getElementById("value")
+        const pixValueDisplay = document.getElementById("pixValue")
+        const pixCode = document.getElementById("pixCode")
+        const qrCanvas = document.getElementById("qrCanvas")
+        const reportList = document.getElementById("reportList")
+        const totalValue = document.getElementById("totalValue")
 
-function openConfig(){document.getElementById("configModal").style.display="flex"}
-function closeConfig(){document.getElementById("configModal").style.display="none";valueField.focus()}
-function saveConfig(){saveData();closeConfig()}
+        function openConfig() { document.getElementById("configModal").style.display = "flex" }
+        function closeConfig() { document.getElementById("configModal").style.display = "none"; valueField.focus() }
+        function saveConfig() { saveData(); closeConfig() }
 
-function saveData(){
-localStorage.setItem("pixConfig",JSON.stringify({
-key:pixKey.value,
-name:nameField.value,
-city:cityField.value
-}))
-}
+        function saveData() {
+            localStorage.setItem("pixConfig", JSON.stringify({
+                key: pixKey.value,
+                name: nameField.value,
+                city: cityField.value
+            }))
+        }
 
-function loadData(){
-let d=JSON.parse(localStorage.getItem("pixConfig")||"{}")
-pixKey.value=d.key||""
-nameField.value=d.name||""
-cityField.value=d.city||""
-}
+        function loadData() {
+            let d = JSON.parse(localStorage.getItem("pixConfig") || "{}")
+            pixKey.value = d.key || ""
+            nameField.value = d.name || ""
+            cityField.value = d.city || ""
+        }
 
-function saveReport(value){
-let data=JSON.parse(localStorage.getItem("pixReports")||"[]")
-data.push({
-id:Date.now(),
-value:parseFloat(value),
-time:new Date().toLocaleTimeString(),
-disabled:false
-})
-localStorage.setItem("pixReports",JSON.stringify(data))
-}
+        function saveReport(value) {
+            let data = JSON.parse(localStorage.getItem("pixReports") || "[]")
+            data.push({
+                id: Date.now(),
+                value: parseFloat(value),
+                time: new Date().toLocaleTimeString(),
+                disabled: false
+            })
+            localStorage.setItem("pixReports", JSON.stringify(data))
+        }
 
-function clearReport(){
-if(!confirm("Tem certeza que deseja apagar todo o histórico?")) return
-localStorage.removeItem("pixReports")
-loadReport()
-}
+        function clearReport() {
+            if (!confirm("Tem certeza que deseja apagar todo o histórico?")) return
+            localStorage.removeItem("pixReports")
+            loadReport()
+        }
 
-function toggleItem(id){
-let data=JSON.parse(localStorage.getItem("pixReports")||"[]")
-data=data.map(i=>{
-if(i.id===id)i.disabled=!i.disabled
-return i
-})
-localStorage.setItem("pixReports",JSON.stringify(data))
-loadReport()
-}
+        function toggleItem(id) {
+            let data = JSON.parse(localStorage.getItem("pixReports") || "[]")
+            data = data.map(i => {
+                if (i.id === id) i.disabled = !i.disabled
+                return i
+            })
+            localStorage.setItem("pixReports", JSON.stringify(data))
+            loadReport()
+        }
 
-function loadReport(){
-let data=JSON.parse(localStorage.getItem("pixReports")||"[]")
-let total=0
+        function loadReport() {
+            let data = JSON.parse(localStorage.getItem("pixReports") || "[]")
+            let total = 0
 
-reportList.innerHTML=data.map(i=>{
-if(!i.disabled) total+=i.value
+            reportList.innerHTML = data.map(i => {
+                if (!i.disabled) total += i.value
 
-return `
-<div class="item ${i.disabled?'disabled':''}">
-<input type="checkbox" ${i.disabled?'checked':''}
+                return `
+<div class="item ${i.disabled ? 'disabled' : ''}">
+<input type="checkbox" ${i.disabled ? 'checked' : ''}
 onchange="toggleItem(${i.id})">
 <div>
 <strong>R$ ${i.value.toFixed(2)}</strong><br>
 <small>${i.time}</small>
 </div>
 </div>`
-}).join("")
+            }).join("")
 
-totalValue.innerText="R$ "+total.toFixed(2)
-}
+            totalValue.innerText = "R$ " + total.toFixed(2)
+        }
 
-function printReport(){
-let data=JSON.parse(localStorage.getItem("pixReports")||"[]")
-let valid=data.filter(i=>!i.disabled)
+        function printReport() {
+            let data = JSON.parse(localStorage.getItem("pixReports") || "[]")
+            let valid = data.filter(i => !i.disabled)
 
-if(!valid.length){alert("Nenhum PIX válido");return}
+            if (!valid.length) { alert("Nenhum PIX válido"); return }
 
-let total=valid.reduce((s,i)=>s+i.value,0)
+            let total = valid.reduce((s, i) => s + i.value, 0)
 
-let html=`
-<div style="font-family:monospace;width:220px;">
-<h3 style="text-align:center;">Relatório PIX</h3>
-${valid.map(i=>`
-<div>
-R$ ${i.value.toFixed(2)}<br>
-<small>${i.time}</small>
-</div>
-`).join("")}
-<hr>
-<b>Total: R$ ${total.toFixed(2)}</b>
-</div>
-`
+            let html = `
+                <div style="font-family:monospace;width:220px;">
+                    <h3 style="text-align:center;">Relatório PIX</h3>
+                    ${valid.map(i => `
+                        <div>
+                            R$ ${i.value.toFixed(2)}<br>
+                            <small>${i.time}</small>
+                        </div>
+                    `).join("")}
+                    <hr>
+                    <b>Total: R$ ${total.toFixed(2)}</b>
+                </div>
+            `
 
-const printArea=document.getElementById("printArea")
-printArea.innerHTML=html
+            const printArea = document.getElementById("printArea")
+            printArea.innerHTML = html
 
-setTimeout(()=>{
-window.print()
-setTimeout(()=>{
-printArea.innerHTML=""
-valueField.focus()
-},200)
-},150)
-}
+            setTimeout(() => {
+                window.print()
+                setTimeout(() => {
+                    printArea.innerHTML = ""
+                    valueField.focus()
+                }, 200)
+            }, 150)
+        }
 
-function openModal(){document.getElementById("modal").style.display="flex";loadReport()}
-function closeModal(){document.getElementById("modal").style.display="none";valueField.focus()}
+        function openModal() { document.getElementById("modal").style.display = "flex"; loadReport() }
+        function closeModal() { document.getElementById("modal").style.display = "none"; valueField.focus() }
 
-// ===== GERADOR PIX CORRIGIDO =====
-function pad(str){return str.length.toString().padStart(2,'0')+str}
+        // ===== GERADOR PIX CORRIGIDO =====
+        function pad(str) { return str.length.toString().padStart(2, '0') + str }
 
-function crc16(payload){
-let polinomio=0x1021,resultado=0xFFFF
-for(let i=0;i<payload.length;i++){
-resultado^=payload.charCodeAt(i)<<8
-for(let j=0;j<8;j++){
-resultado=(resultado&0x8000)?((resultado<<1)^polinomio):(resultado<<1)
-resultado&=0xFFFF
-}}
-return resultado.toString(16).toUpperCase().padStart(4,'0')
-}
+        function crc16(payload) {
+            let polinomio = 0x1021, resultado = 0xFFFF
+            for (let i = 0; i < payload.length; i++) {
+                resultado ^= payload.charCodeAt(i) << 8
+                for (let j = 0; j < 8; j++) {
+                    resultado = (resultado & 0x8000) ? ((resultado << 1) ^ polinomio) : (resultado << 1)
+                    resultado &= 0xFFFF
+                }
+            }
+            return resultado.toString(16).toUpperCase().padStart(4, '0')
+        }
 
-function generatePix(){
-let key=pixKey.value.trim()
-let name=nameField.value.toUpperCase().substring(0,25)
-let city=cityField.value.toUpperCase().substring(0,15)
-let value=parseFloat(valueField.value.replace(",",".").trim())
+        function generatePix() {
+            let key = pixKey.value.trim()
+            let name = nameField.value.toUpperCase().substring(0, 25)
+            let city = cityField.value.toUpperCase().substring(0, 15)
+            let value = parseFloat(valueField.value.replace(",", ".").trim())
 
-if(!key||!name||!city||isNaN(value)){
-alert("Preencha tudo")
-return
-}
+            if (!key || !name || !city || isNaN(value)) {
+                alert("Preencha tudo")
+                return
+            }
 
-value=value.toFixed(2)
+            value = value.toFixed(2)
 
-let gui="0014BR.GOV.BCB.PIX"
-let chave="01"+pad(key)
-let merchantAccount="26"+pad(gui+chave)
-let additional="62"+pad("05"+pad("***"))
+            let gui = "0014BR.GOV.BCB.PIX"
+            let chave = "01" + pad(key)
+            let merchantAccount = "26" + pad(gui + chave)
+            let additional = "62" + pad("05" + pad("***"))
 
-let payload=
-"000201"+
-merchantAccount+
-"52040000"+
-"5303986"+
-"54"+pad(value)+
-"5802BR"+
-"59"+pad(name)+
-"60"+pad(city)+
-additional+
-"6304"
+            let payload =
+                "000201" +
+                merchantAccount +
+                "52040000" +
+                "5303986" +
+                "54" + pad(value) +
+                "5802BR" +
+                "59" + pad(name) +
+                "60" + pad(city) +
+                additional +
+                "6304"
 
-let pix=payload+crc16(payload)
+            let pix = payload + crc16(payload)
 
-pixCode.value=pix
-QRCode.toCanvas(qrCanvas,pix,{errorCorrectionLevel:'H'})
+            pixCode.value = pix
+            QRCode.toCanvas(qrCanvas, pix, { errorCorrectionLevel: 'H' })
 
-pixValueDisplay.innerText="R$ "+value.replace(".",",")
+            pixValueDisplay.innerText = "R$ " + value.replace(".", ",")
 
-saveReport(value)
-saveData()
+            saveReport(value)
+            saveData()
 
-valueField.value=""
-valueField.focus()
-}
+            valueField.value = ""
+            valueField.focus()
+        }
 
-function copyPix(){navigator.clipboard.writeText(pixCode.value)}
+        function copyPix() { navigator.clipboard.writeText(pixCode.value) }
 
-document.querySelectorAll("input").forEach(i=>{
-i.addEventListener("keypress",e=>{
-if(e.key==="Enter") generatePix()
-})
-})
+        document.querySelectorAll("input").forEach(i => {
+            i.addEventListener("keypress", e => {
+                if (e.key === "Enter") generatePix()
+            })
+        })
 
-loadData()
-valueField.focus()
-</script>
+        loadData()
+        valueField.focus()
+
+        document.addEventListener("click", function (e) {
+            if (e.target.tagName !== "INPUT") {
+                valueField.focus()
+            }
+        })
+    </script>
 
 </body>
+
 </html>
