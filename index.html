@@ -3,8 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>PIX Pro</title>
-
-<!-- ICONES (funciona no Windows 7) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
@@ -28,8 +26,8 @@ body{
     border-radius:16px;
     width:380px;
     box-shadow:0 20px 40px rgba(0,0,0,0.2);
-	display:flex;
-    flex-direction:column;
+	display: flex;
+    flex-direction: column;
 }
 
 .header{
@@ -42,6 +40,7 @@ body{
 .header h1{
     margin:0;
     font-size:22px;
+    text-align:center;
 }
 
 .btn-report{
@@ -52,11 +51,12 @@ body{
     background:#6a11cb;
     color:white;
     cursor:pointer;
+    width:unset;
 }
 
 .secondary{background:#f1f1f1;color:black;}
 
-.pix-value{
+.pix-value {
     font-size:20px;
     font-weight:bold;
     text-align:center;
@@ -69,9 +69,11 @@ input{
     margin-top:8px;
     border-radius:8px;
     border:1px solid #ddd;
+    font-size:15px;
 }
 
 button{
+    width:100%;
     padding:12px;
     margin-top:10px;
     border:none;
@@ -124,6 +126,7 @@ textarea{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    margin-bottom:10px;
 }
 
 .total{font-size:20px;font-weight:bold;}
@@ -149,6 +152,30 @@ textarea{
 }
 
 .item.disabled{opacity:0.4;}
+
+.item input{
+    appearance:none;
+    width:18px;
+    height:18px;
+    border:2px solid #ccc;
+    border-radius:5px;
+    cursor:pointer;
+    position:relative;
+}
+
+.item input:checked{
+    border-color:#e74c3c;
+    background:#ffecec;
+}
+
+.item input:checked::after{
+    content:"✖";
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    color:#e74c3c;
+}
 
 #printArea{display:none;}
 
@@ -179,6 +206,7 @@ body *{visibility:hidden}
     </button>
 </div>
 
+
 <input id="value" placeholder="Digite o valor">
 
 <button class="primary" onclick="generatePix()">Gerar PIX</button>
@@ -187,10 +215,7 @@ body *{visibility:hidden}
 
 <canvas id="qrCanvas" width="220"></canvas>
 <textarea id="pixCode"></textarea>
-
-<button class="success" onclick="copyPix()">
-    <i class="fas fa-copy"></i> Copiar Código
-</button>
+<button class="success" onclick="copyPix()">Copiar Código</button>
 
 </div>
 
@@ -200,33 +225,24 @@ body *{visibility:hidden}
 
 <div class="modal-header">
 <div class="total" id="totalValue">R$ 0,00</div>
-<div class="close" onclick="closeModal()">
-    <i class="fas fa-xmark"></i>
-</div>
+<div class="close" onclick="closeModal()">✕</div>
 </div>
 
-<button class="primary" onclick="printReport()">
-    <i class="fas fa-print"></i> Imprimir
-</button>
-
-<button class="danger" onclick="clearReport()">
-    <i class="fas fa-trash"></i> Limpar histórico
-</button>
+<button class="primary" onclick="printReport()">🧾 Imprimir</button>
+<button class="danger" onclick="clearReport()">🗑 Limpar histórico</button>
 
 <div class="list" id="reportList"></div>
 
 </div>
 </div>
 
-<!-- CONFIG -->
+<!-- MODAL CONFIG -->
 <div class="modal" id="configModal">
 <div class="modal-content">
 
 <div class="modal-header">
 <h3>Configurações</h3>
-<div class="close" onclick="closeConfig()">
-    <i class="fas fa-xmark"></i>
-</div>
+<div class="close" onclick="closeConfig()">✕</div>
 </div>
 
 <input id="pixKey" placeholder="Chave PIX">
@@ -287,6 +303,16 @@ localStorage.removeItem("pixReports")
 loadReport()
 }
 
+function toggleItem(id){
+let data=JSON.parse(localStorage.getItem("pixReports")||"[]")
+data=data.map(i=>{
+if(i.id===id)i.disabled=!i.disabled
+return i
+})
+localStorage.setItem("pixReports",JSON.stringify(data))
+loadReport()
+}
+
 function loadReport(){
 let data=JSON.parse(localStorage.getItem("pixReports")||"[]")
 let total=0
@@ -295,7 +321,9 @@ reportList.innerHTML=data.map(i=>{
 if(!i.disabled) total+=i.value
 
 return `
-<div class="item">
+<div class="item ${i.disabled?'disabled':''}">
+<input type="checkbox" ${i.disabled?'checked':''}
+onchange="toggleItem(${i.id})">
 <div>
 <strong>R$ ${i.value.toFixed(2)}</strong><br>
 <small>${i.time}</small>
@@ -308,21 +336,42 @@ totalValue.innerText="R$ "+total.toFixed(2)
 
 function printReport(){
 let data=JSON.parse(localStorage.getItem("pixReports")||"[]")
-let total=data.reduce((s,i)=>s+i.value,0)
+let valid=data.filter(i=>!i.disabled)
 
-let html=`<div style="font-family:monospace;width:220px;">
+if(!valid.length){alert("Nenhum PIX válido");return}
+
+let total=valid.reduce((s,i)=>s+i.value,0)
+
+let html=`
+<div style="font-family:monospace;width:220px;">
 <h3 style="text-align:center;">Relatório PIX</h3>
-${data.map(i=>`<div>R$ ${i.value.toFixed(2)}<br><small>${i.time}</small></div>`).join("")}
-<hr><b>Total: R$ ${total.toFixed(2)}</b></div>`
+${valid.map(i=>`
+<div>
+R$ ${i.value.toFixed(2)}<br>
+<small>${i.time}</small>
+</div>
+`).join("")}
+<hr>
+<b>Total: R$ ${total.toFixed(2)}</b>
+</div>
+`
 
+const printArea=document.getElementById("printArea")
 printArea.innerHTML=html
-setTimeout(()=>window.print(),100)
+
+setTimeout(()=>{
+window.print()
+setTimeout(()=>{
+printArea.innerHTML=""
+valueField.focus()
+},200)
+},150)
 }
 
 function openModal(){document.getElementById("modal").style.display="flex";loadReport()}
-function closeModal(){document.getElementById("modal").style.display="none"}
+function closeModal(){document.getElementById("modal").style.display="none";valueField.focus()}
 
-// PIX
+// ===== GERADOR PIX CORRIGIDO =====
 function pad(str){return str.length.toString().padStart(2,'0')+str}
 
 function crc16(payload){
@@ -381,6 +430,12 @@ valueField.focus()
 }
 
 function copyPix(){navigator.clipboard.writeText(pixCode.value)}
+
+document.querySelectorAll("input").forEach(i=>{
+i.addEventListener("keypress",e=>{
+if(e.key==="Enter") generatePix()
+})
+})
 
 loadData()
 valueField.focus()
