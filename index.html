@@ -215,7 +215,9 @@ body *{visibility:hidden}
 
 <canvas id="qrCanvas" width="220"></canvas>
 <textarea id="pixCode"></textarea>
-<button class="success" onclick="copyPix()">Copiar Código</button>
+<button class="success" onclick="copyPix()">
+    <i class="fas fa-copy"></i> Copiar Código
+</button>
 
 </div>
 
@@ -225,11 +227,18 @@ body *{visibility:hidden}
 
 <div class="modal-header">
 <div class="total" id="totalValue">R$ 0,00</div>
-<div class="close" onclick="closeModal()">✕</div>
+<div class="close" onclick="closeModal()">
+    <i class="fas fa-xmark"></i>
+</div>
 </div>
 
-<button class="primary" onclick="printReport()">🧾 Imprimir</button>
-<button class="danger" onclick="clearReport()">🗑 Limpar histórico</button>
+<button class="primary" onclick="printReport()">
+    <i class="fas fa-print"></i> Imprimir
+</button>
+
+<button class="danger" onclick="clearReport()">
+    <i class="fas fa-trash"></i> Limpar histórico
+</button>
 
 <div class="list" id="reportList"></div>
 
@@ -242,7 +251,9 @@ body *{visibility:hidden}
 
 <div class="modal-header">
 <h3>Configurações</h3>
-<div class="close" onclick="closeConfig()">✕</div>
+<div class="close" onclick="closeConfig()">
+    <i class="fas fa-xmark"></i>
+</div>
 </div>
 
 <input id="pixKey" placeholder="Chave PIX">
